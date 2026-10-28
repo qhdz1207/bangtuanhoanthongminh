@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bảng tuần hoàn các nguyên tố hoá học</title>
+<style>
+:root{--bg:#070b16;--card:#0d1426;--line:#1e2a44;--tx:#e8edf7;--mut:#8b97b3;--kl:#4aa8e8;--cd:#f7b731;--pk:#f0606f;--kh:#8cc63f;--acc:#5b4ff0;--bg2:#0a1020;--bg3:#0b1224;--link:#a9b4ff;--box:#0d1630;--panel:#17223f;--pline:#33466f;--mut2:#bcc8e2;--ov:rgba(2,5,12,.9);--bohr:#050a17}
+:root[data-theme=light]{--bg:#f3f6fb;--card:#fff;--line:#d3dbe8;--tx:#0f172a;--mut:#5b6b85;--kl:#1d7fd1;--cd:#b87a00;--pk:#d6354a;--kh:#4a8f12;--bg2:#f6f9fd;--bg3:#e9eff8;--link:#4338ca;color-scheme:light;--box:#fff;--panel:#f1f5fb;--pline:#d3dbe8;--mut2:#4a5a75;--ov:rgba(15,23,42,.6);--bohr:#eaf0fa}
+body{position:relative}#th{position:absolute;right:16px;top:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+h1{text-align:center;color:#2fb7ac;font-size:clamp(20px,3vw,34px);margin:6px 0 14px;letter-spacing:.5px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-bottom:14px}
+input{background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:10px 14px;width:min(360px,100%);font-size:15px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px;display:flex;gap:8px;align-items:center}
+.chip i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.chip.on{outline:2px solid var(--acc)}
+.chip.sp i{background:linear-gradient(135deg,#f7b731,#f0606f)}
+#spinfo{display:none;max-width:1000px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+#spinfo h3{margin:0 0 8px}
+#spinfo .it{display:inline-flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:3px;font-size:13px;cursor:pointer}
+#spinfo .it b{color:var(--tx)}#spinfo .it span{font-family:monospace;color:var(--link)}
+.el.spk::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--tx);box-shadow:0 0 0 1px #0006}
+.tempbar{max-width:1000px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.tempbar label{font-weight:600;color:#f0606f;white-space:nowrap}
+#T{flex:1;min-width:180px;width:auto;padding:0;accent-color:#4aa8e8}
+#tv{text-align:center;min-width:110px;font-family:monospace}#tv b{font-size:18px;color:#7cc4ff;display:block}#tv span{font-size:12px;color:var(--mut)}
+.lg{display:flex;gap:10px;font-size:12px;color:var(--mut);align-items:center}.lg i{display:inline-block;width:18px;height:6px;border-radius:3px;margin-right:4px;vertical-align:middle}
+.tb{height:5px;border-radius:3px;position:relative;margin-top:3px;flex:none}
+.tb i{position:absolute;top:-2px;width:2px;height:9px;background:#fff;box-shadow:0 0 0 1px #000a;transform:translateX(-1px);transition:left .15s}
+.wrap{overflow-x:auto;padding-bottom:8px}
+#grid{display:grid;grid-template-columns:34px repeat(18,minmax(52px,1fr));gap:3px;min-width:1030px;max-width:1500px;margin:auto}
+.el{aspect-ratio:1/1.12;border-radius:9px;color:var(--c);border:1px solid color-mix(in srgb,var(--c) 70%,transparent);background:color-mix(in srgb,var(--c) 9%,transparent);padding:3px 4px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;transition:transform .12s,opacity .2s,background .12s;position:relative}
+.el:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
+.el .ms{font-size:9px;color:var(--mut)}
+.sym{color:var(--c)}
+.el:hover{transform:scale(1.18);z-index:5;box-shadow:0 6px 20px #0008}
+.el .n{font-size:10px;font-weight:700}
+.el .top{display:flex;justify-content:space-between;align-items:center;gap:2px}
+.st{font-size:8px;font-weight:700;text-align:center;line-height:10px;color:var(--mut)}.st.l{color:#3b82f6}.st.k{color:#a855f7}.st.u{color:#9ca3af}
+.el .s{font-size:clamp(15px,1.7vw,24px);font-weight:700;text-align:center;line-height:1}
+.el .m{font-size:9px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.el.dim{opacity:.12;pointer-events:none}
+.kl{--c:var(--kl)}.cd{--c:var(--cd)}.pk{--c:var(--pk)}.kh{--c:var(--kh)}
+.hdr{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:11px;color:var(--mut);line-height:1.25;padding-bottom:2px}
+.hdr b{color:var(--tx);font-size:13px}
+.per{display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--tx);font-size:14px}
+.corner{font-size:10px;color:var(--mut);display:flex;align-items:flex-end;justify-content:center}
+.lbl{display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mut);text-align:center}
+#modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+#modal.open{display:flex}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:18px;width:min(900px,100%);max-height:94vh;overflow:auto}
+.hd{display:flex;gap:16px;align-items:center;padding:20px;border-bottom:1px solid var(--line)}
+.sym{width:92px;height:92px;border-radius:14px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sym b{font-size:38px}.sym small{font-size:13px}
+.hd h2{margin:0;font-size:28px}.hd h2 span{color:var(--mut);font-size:18px;font-weight:400}
+.cat{font-weight:600;margin-top:4px}.x{margin-left:auto;background:var(--bg3);border:0;color:var(--mut);width:40px;height:40px;border-radius:10px;font-size:20px;cursor:pointer}
+.bd{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;padding:20px}
+@media(max-width:720px){.bd{grid-template-columns:1fr}}
+.bohr{background:var(--bg3);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.bohr h4{margin:4px 0 0;color:var(--mut);font-size:13px;letter-spacing:1px}
+.bohr svg{width:100%;max-width:340px}
+.cfg{font-family:monospace;color:var(--link);font-size:13px;margin-top:6px}
+.props{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.p{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.p span{display:block;font-size:12px;color:var(--mut);margin-bottom:4px}.p b{font-size:16px}
+h3{font-size:14px;color:var(--mut);margin:0 0 10px}
+.desc{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14px;line-height:1.5;margin-top:14px}
+.ft{padding:14px 20px;border-top:1px solid var(--line);text-align:right}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:600;cursor:pointer}
+#cmp{max-width:1000px;margin:18px auto 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:none}
+#cmp table{width:100%;border-collapse:collapse;font-size:14px}
+#cmp td,#cmp th{border-bottom:1px solid var(--line);padding:8px;text-align:left}
+.note{text-align:center;color:var(--mut);font-size:12px;margin-top:12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.orb{transform-origin:170px 170px;animation:sp linear infinite}
+/* Thẻ chi tiết: nền đặc, tương phản cao */
+#modal{background:var(--ov);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.box{background:var(--box);border:1px solid var(--pline);box-shadow:0 24px 70px #000d}
+.hd,.ft{border-color:var(--pline)}
+.hd h2{color:var(--tx)}.hd h2 span{color:var(--mut2)}
+.x{background:var(--panel);color:var(--tx)}
+.bohr{background:var(--bohr);border-color:var(--pline)}
+.bohr h4,h3{color:var(--mut2)}
+.p,.desc{background:var(--panel);border-color:var(--pline)}
+.p span{color:var(--mut2)}.p b{color:var(--tx)}
+.desc{color:var(--tx)}
+.sym{background:color-mix(in srgb,var(--c) 22%,var(--box))}
+</style>
+</head>
+<body>
+<button class="chip" id="th">☀️ Sáng</button>
+<h1>BẢNG TUẦN HOÀN CÁC NGUYÊN TỐ HOÁ HỌC</h1>
+<div class="bar">
+  <input id="q" placeholder="Tìm: tên, ký hiệu, số hiệu (vd: sắt, Fe, 26, >100)…">
+  <button class="chip" data-c="kl"><i style="background:var(--kl)"></i>Kim loại</button>
+  <button class="chip" data-c="cd"><i style="background:var(--cd)"></i>Kim loại chuyển tiếp</button>
+  <button class="chip" data-c="pk"><i style="background:var(--pk)"></i>Phi kim</button>
+  <button class="chip" data-c="kh"><i style="background:var(--kh)"></i>Khí hiếm</button>
+  <button class="chip sp" id="spbtn"><i></i>Cấu hình e đặc biệt</button>
+</div>
+<div class="tempbar"><label>🌡 Nhiệt độ:</label><input type="range" id="T" min="0" max="6000" step="1" value="298"><div id="tv"></div><button class="chip" id="t0">25°C</button>
+  <div class="lg"><span><i style="background:#64748b"></i>Rắn</span><span><i style="background:#1d4ed8"></i>Lỏng (nóng chảy → sôi)</span><span><i style="background:#7c3aed"></i>Khí (≥ điểm sôi)</span><span><i style="background:#6b7280"></i>Chưa rõ</span></div></div>
+<div id="spinfo"></div>
+<div class="wrap"><div id="grid"></div></div>
+<div id="cmp"></div>
+<p class="note">Mỗi ô ghi số hiệu (góc trái) và trạng thái ở 25°C (góc phải): Rắn, Lỏng, Khí; nguyên tố Z ≥ 104 chưa xác định được. Mật độ: g/cm³ (ở điều kiện thường). Dữ liệu mang tính tham khảo.</p>
+
+<div id="modal"><div class="box" id="box"></div></div>
+
+<script>
+const RAW=`H|Hydrogen|1.008|0.00008988|2.2|+1,-1|13.99|20.27|1766
+He|Helium|4.0026|0.0001785||0|0.95|4.22|1895
+Li|Lithium|6.94|0.534|0.98|+1|453.65|1603|1817
+Be|Beryllium|9.0122|1.85|1.57|+2|1560|2742|1798
+B|Boron|10.81|2.34|2.04|+3|2349|4200|1808
+C|Carbon|12.011|2.267|2.55|±4,+2|3823|4098|0
+N|Nitrogen|14.007|0.0012506|3.04|-3,+5|63.15|77.36|1772
+O|Oxygen|15.999|0.001429|3.44|-2|54.36|90.20|1774
+F|Fluorine|18.998|0.001696|3.98|-1|53.53|85.03|1886
+Ne|Neon|20.180|0.0008999||0|24.56|27.07|1898
+Na|Sodium|22.990|0.971|0.93|+1|370.87|1156|1807
+Mg|Magnesium|24.305|1.738|1.31|+2|923|1363|1755
+Al|Aluminium|26.982|2.70|1.61|+3|933.47|2792|1825
+Si|Silicon|28.085|2.329|1.90|+4,-4|1687|3538|1824
+P|Phosphorus|30.974|1.82|2.19|+5,+3,-3|317.3|553.6|1669
+S|Sulfur|32.06|2.067|2.58|-2,+4,+6|388.36|717.8|0
+Cl|Chlorine|35.45|0.003214|3.16|-1,+1,+5,+7|171.6|239.11|1774
+Ar|Argon|39.948|0.0017837||0|83.8|87.3|1894
+K|Potassium|39.098|0.862|0.82|+1|336.53|1032|1807
+Ca|Calcium|40.078|1.55|1.00|+2|1115|1757|1808
+Sc|Scandium|44.956|2.989|1.36|+3|1814|3109|1879
+Ti|Titanium|47.867|4.54|1.54|+4,+3|1941|3560|1791
+V|Vanadium|50.942|6.11|1.63|+5,+4,+3,+2|2183|3680|1801
+Cr|Chromium|51.996|7.15|1.66|+6,+3,+2|2180|2944|1797
+Mn|Manganese|54.938|7.44|1.55|+7,+4,+2|1519|2334|1774
+Fe|Iron|55.845|7.874|1.83|+3,+2|1811|3134|0
+Co|Cobalt|58.933|8.86|1.88|+3,+2|1768|3200|1735
+Ni|Nickel|58.693|8.912|1.91|+2|1728|3186|1751
+Cu|Copper|63.546|8.96|1.90|+2,+1|1357.77|2835|0
+Zn|Zinc|65.38|7.134|1.65|+2|692.68|1180|1746
+Ga|Gallium|69.723|5.907|1.81|+3|302.91|2477|1875
+Ge|Germanium|72.630|5.323|2.01|+4|1211.4|3106|1886
+As|Arsenic|74.922|5.776|2.18|+3,+5,-3|1090|887|1250
+Se|Selenium|78.971|4.809|2.55|-2,+4,+6|494|958|1817
+Br|Bromine|79.904|3.122|2.96|-1,+1,+5|265.8|332|1826
+Kr|Krypton|83.798|0.003733|3.00|0|115.79|119.93|1898
+Rb|Rubidium|85.468|1.532|0.82|+1|312.46|961|1861
+Sr|Strontium|87.62|2.64|0.95|+2|1050|1655|1790
+Y|Yttrium|88.906|4.469|1.22|+3|1799|3609|1794
+Zr|Zirconium|91.224|6.506|1.33|+4|2128|4682|1789
+Nb|Niobium|92.906|8.57|1.6|+5,+3|2750|5017|1801
+Mo|Molybdenum|95.95|10.22|2.16|+6,+4|2896|4912|1781
+Tc|Technetium|98|11.5|1.9|+7,+4|2430|4538|1937
+Ru|Ruthenium|101.07|12.37|2.2|+3,+4|2607|4423|1844
+Rh|Rhodium|102.91|12.41|2.28|+3|2237|3968|1803
+Pd|Palladium|106.42|12.02|2.20|+2,+4|1828.05|3236|1803
+Ag|Silver|107.87|10.501|1.93|+1|1234.93|2435|0
+Cd|Cadmium|112.41|8.69|1.69|+2|594.22|1040|1817
+In|Indium|114.82|7.31|1.78|+3|429.75|2345|1863
+Sn|Tin|118.71|7.287|1.96|+4,+2|505.08|2875|0
+Sb|Antimony|121.76|6.685|2.05|+3,+5,-3|903.78|1860|0
+Te|Tellurium|127.60|6.232|2.1|-2,+4,+6|722.66|1261|1782
+I|Iodine|126.90|4.93|2.66|-1,+1,+5,+7|386.85|457.4|1811
+Xe|Xenon|131.29|0.005887|2.6|0|161.4|165.05|1898
+Cs|Caesium|132.91|1.873|0.79|+1|301.59|944|1860
+Ba|Barium|137.33|3.594|0.89|+2|1000|2170|1808
+La|Lanthanum|138.91|6.145|1.10|+3|1193|3737|1839
+Ce|Cerium|140.12|6.77|1.12|+3,+4|1068|3716|1803
+Pr|Praseodymium|140.91|6.773|1.13|+3|1208|3793|1885
+Nd|Neodymium|144.24|7.007|1.14|+3|1297|3347|1885
+Pm|Promethium|145|7.26|1.13|+3|1315|3273|1945
+Sm|Samarium|150.36|7.52|1.17|+3,+2|1345|2067|1879
+Eu|Europium|151.96|5.243|1.2|+3,+2|1099|1802|1901
+Gd|Gadolinium|157.25|7.895|1.2|+3|1585|3546|1880
+Tb|Terbium|158.93|8.229|1.1|+3|1629|3503|1843
+Dy|Dysprosium|162.50|8.55|1.22|+3|1680|2840|1886
+Ho|Holmium|164.93|8.795|1.23|+3|1734|2993|1878
+Er|Erbium|167.26|9.066|1.24|+3|1802|3141|1842
+Tm|Thulium|168.93|9.321|1.25|+3|1818|2223|1879
+Yb|Ytterbium|173.05|6.965|1.1|+3,+2|1097|1469|1878
+Lu|Lutetium|174.97|9.84|1.27|+3|1925|3675|1907
+Hf|Hafnium|178.49|13.31|1.3|+4|2506|4876|1923
+Ta|Tantalum|180.95|16.69|1.5|+5|3290|5731|1802
+W|Tungsten|183.84|19.25|2.36|+6,+4|3695|5828|1783
+Re|Rhenium|186.21|21.02|1.9|+7,+4|3459|5869|1925
+Os|Osmium|190.23|22.59|2.2|+4,+8|3306|5285|1803
+Ir|Iridium|192.22|22.56|2.20|+3,+4|2719|4701|1803
+Pt|Platinum|195.08|21.45|2.28|+2,+4|2041.4|4098|1735
+Au|Gold|196.97|19.282|2.54|+3,+1|1337.33|3129|0
+Hg|Mercury|200.59|13.534|2.00|+2,+1|234.32|629.88|0
+Tl|Thallium|204.38|11.85|1.62|+1,+3|577|1746|1861
+Pb|Lead|207.2|11.342|2.33|+2,+4|600.61|2022|0
+Bi|Bismuth|208.98|9.807|2.02|+3|544.7|1837|1753
+Po|Polonium|209|9.32|2.0|+4,+2|527|1235|1898
+At|Astatine|210||2.2|-1,+1|575||1940
+Rn|Radon|222|0.00973|2.2|0|202|211.3|1900
+Fr|Francium|223||0.79|+1|300|950|1939
+Ra|Radium|226|5.5|0.9|+2|973|2010|1898
+Ac|Actinium|227|10.07|1.1|+3|1323|3471|1899
+Th|Thorium|232.04|11.72|1.3|+4|2023|5061|1829
+Pa|Protactinium|231.04|15.37|1.5|+5,+4|1841|4300|1913
+U|Uranium|238.03|19.05|1.38|+6,+4|1405.3|4404|1789
+Np|Neptunium|237|20.45|1.36|+5|917|4273|1940
+Pu|Plutonium|244|19.84|1.28|+4,+3|912.5|3501|1940
+Am|Americium|243|13.69|1.3|+3|1449|2880|1944
+Cm|Curium|247|13.51|1.3|+3|1613|3383|1944
+Bk|Berkelium|247|14.78|1.3|+3|1259|2900|1949
+Cf|Californium|251|15.1|1.3|+3|1173|1743|1950
+Es|Einsteinium|252|8.84|1.3|+3|1133||1952
+Fm|Fermium|257||1.3|+3|1800||1952
+Md|Mendelevium|258||1.3|+3|1100||1955
+No|Nobelium|259||1.3|+2|1100||1958
+Lr|Lawrencium|266||1.3|+3|1900||1961
+Rf|Rutherfordium|267||||||1964
+Db|Dubnium|268||||||1968
+Sg|Seaborgium|269||||||1974
+Bh|Bohrium|270||||||1981
+Hs|Hassium|277||||||1984
+Mt|Meitnerium|278||||||1982
+Ds|Darmstadtium|281||||||1994
+Rg|Roentgenium|282||||||1994
+Cn|Copernicium|285||||||1996
+Nh|Nihonium|286||||||2004
+Fl|Flerovium|289||||||1998
+Mc|Moscovium|290||||||2003
+Lv|Livermorium|293||||||2000
+Ts|Tennessine|294||||||2010
+Og|Oganesson|294||||||2002`;
+
+const NOBLE=[2,10,18,36,54,86,118];
+const NONMETAL=[1,5,6,7,8,9,14,15,16,17,32,33,34,35,51,52,53,85];
+const CAT={kl:'Kim loại',cd:'Kim loại chuyển tiếp',pk:'Phi kim',kh:'Khí hiếm'};
+const COL={kl:'var(--kl)',cd:'var(--cd)',pk:'var(--pk)',kh:'var(--kh)'};
+const VN=`Hidro,Heli,Liti,Beri,Bo,Cacbon,Nitơ,Oxi,Flo,Neon,Natri,Magie,Nhôm,Silic,Photpho,Lưu huỳnh,Clo,Agon,Kali,Canxi,Scandi,Titan,Vanadi,Crom,Mangan,Sắt,Coban,Niken,Đồng,Kẽm,Gali,Gemani,Asen,Selen,Brom,Kripton,Rubidi,Stronti,Ytri,Zirconi,Niobi,Molipden,Tecnexi,Rutheni,Rodi,Paladi,Bạc,Cadimi,Indi,Thiếc,Antimon,Telua,Iốt,Xenon,Xesi,Bari,Lantan,Ceri,Praseodymi,Neodymi,Prometi,Samari,Europi,Gadolini,Terbi,Dysprosi,Holmi,Erbi,Thuli,Ytterbi,Lutesi,Hafni,Tantan,Vonfram,Reni,Osmi,Iridi,Bạch kim,Vàng,Thủy ngân,Tali,Chì,Bismut,Poloni,Astatin,Radon,Franxi,Radi,Actini,Thori,Protactini,Urani,Neptuni,Plutoni,Americi,Curi,Berkeli,Californi,Einsteini,Fermi,Mendelevi,Nobeli,Larenxi,Rutherfordi,Dubni,Seaborgi,Bohri,Hassi,Meitneri,Darmstadti,Roentgeni,Copernixi,Nihoni,Flerovi,Moscovi,Livermori,Tennessine,Oganesson`.split(',');
+const DESC=`Nguyên tố nhẹ nhất và phổ biến nhất vũ trụ; là nhiên liệu của Mặt Trời, dùng sản xuất amoniac, pin nhiên liệu và năng lượng xanh.
+Khí hiếm trơ, rất nhẹ; dùng bơm khinh khí cầu, làm lạnh nam châm siêu dẫn (MRI) và làm khí bảo vệ khi hàn.
+Kim loại nhẹ nhất; dùng trong pin lithium-ion, hợp kim nhẹ và thuốc điều trị rối loạn lưỡng cực.
+Kim loại nhẹ, cứng và độc; dùng trong hợp kim đồng-beri, cửa sổ ống tia X, linh kiện hàng không vũ trụ.
+Á kim; dùng trong thuỷ tinh borosilicat, chất tẩy rửa (borax), sợi bo và vật liệu hấp thụ neutron.
+Nền tảng của hoá học hữu cơ và sự sống; tồn tại dạng than chì, kim cương, graphene; có trong nhiên liệu và thép.
+Chiếm khoảng 78% khí quyển; dùng sản xuất phân bón, thuốc nổ, nitơ lỏng làm lạnh sâu; có trong protein và DNA.
+Cần cho hô hấp và sự cháy, chiếm khoảng 21% khí quyển; dùng trong y tế, luyện thép, hàn cắt kim loại.
+Phi kim hoạt động mạnh nhất; dùng trong kem đánh răng (florua), nhựa teflon và UF₆ để làm giàu urani.
+Khí hiếm trơ; phát sáng đỏ cam trong đèn neon quảng cáo, dùng làm chất làm lạnh.
+Kim loại kiềm mềm, phản ứng mạnh với nước; có trong muối ăn NaCl, xà phòng, đèn hơi natri.
+Kim loại nhẹ, cháy sáng chói; dùng trong hợp kim nhẹ, pháo hoa; có trong diệp lục và cần cho cơ thể.
+Kim loại nhẹ, bền, dẫn điện tốt, không gỉ; dùng trong hàng không, bao bì, dây điện và xây dựng.
+Á kim, nền tảng của chip bán dẫn và pin mặt trời; có trong cát, thuỷ tinh, xi măng, silicone.
+Phi kim có nhiều dạng thù hình (trắng, đỏ); dùng trong phân bón, diêm; có trong ATP và DNA.
+Phi kim màu vàng; dùng sản xuất axit sunfuric, lưu hoá cao su, thuốc súng, thuốc trừ sâu.
+Khí màu vàng lục, độc; dùng khử trùng nước, sản xuất nhựa PVC, chất tẩy trắng và muối ăn.
+Khí hiếm trơ, chiếm khoảng 1% khí quyển; dùng làm khí bảo vệ khi hàn và trong bóng đèn sợi đốt.
+Kim loại kiềm mềm, phản ứng mạnh; cần cho thần kinh và cơ; dùng trong phân bón kali.
+Có trong xương, răng, vỏ sò; thành phần của đá vôi, xi măng và thạch cao.
+Kim loại nhẹ; hợp kim nhôm-scandi dùng trong hàng không, dụng cụ thể thao, đèn cường độ cao.
+Kim loại nhẹ, bền, chống ăn mòn, tương thích sinh học; dùng trong máy bay, cấy ghép y tế; TiO₂ làm bột màu trắng.
+Làm tăng độ bền và độ dẻo của thép; dùng trong thép công cụ, xúc tác sản xuất axit sunfuric.
+Kim loại cứng, sáng bóng, chống gỉ; dùng mạ crom, thép không gỉ, chất màu (hồng ngọc, ngọc lục bảo).
+Dùng trong sản xuất thép (giảm độ giòn), pin kiềm; KMnO₄ là chất oxi hoá mạnh thông dụng.
+Kim loại phổ biến nhất trong sản xuất thép, có từ tính; thành phần hemoglobin vận chuyển oxi trong máu.
+Kim loại có từ tính; dùng trong pin lithium-ion, hợp kim siêu bền, chất màu xanh coban; có trong vitamin B12.
+Kim loại chống ăn mòn; dùng trong thép không gỉ, đồng xu, mạ điện, pin Ni-MH.
+Dẫn điện và dẫn nhiệt rất tốt; dùng làm dây điện, ống nước, hợp kim đồng thau và đồng thanh.
+Dùng mạ chống gỉ cho thép, làm pin, hợp kim đồng thau; cần cho enzyme và hệ miễn dịch.
+Nóng chảy ở khoảng 30°C (tan trong lòng bàn tay); dùng trong LED, bán dẫn GaAs, pin mặt trời.
+Á kim bán dẫn; dùng trong sợi quang, thấu kính hồng ngoại, pin mặt trời cho vệ tinh.
+Á kim rất độc; dùng trong bán dẫn GaAs, bảo quản gỗ; thuốc trừ sâu nay bị hạn chế.
+Phi kim cần ở lượng vết; dùng trong pin mặt trời, thuỷ tinh nhuộm màu, dầu gội trị gàu.
+Phi kim ở dạng lỏng màu nâu đỏ, độc; dùng trong chất chống cháy, thuốc nhuộm, dược phẩm.
+Khí hiếm; dùng trong đèn flash chụp ảnh, laze và đèn pha hiệu suất cao.
+Kim loại kiềm rất hoạt động; dùng trong đồng hồ nguyên tử, tế bào quang điện và nghiên cứu.
+Kim loại kiềm thổ; muối cháy đỏ thẫm trong pháo hoa; ⁹⁰Sr là đồng vị phóng xạ nguy hiểm.
+Kim loại hiếm; dùng trong đèn LED trắng, laze YAG và vật liệu siêu dẫn nhiệt độ cao (YBCO).
+Kim loại chống ăn mòn, ít hấp thụ neutron; dùng làm vỏ thanh nhiên liệu hạt nhân, thiết bị hoá chất.
+Kim loại chịu nhiệt; dùng trong hợp kim siêu bền, nam châm siêu dẫn và động cơ tên lửa.
+Kim loại nóng chảy cao; dùng trong thép hợp kim, chất xúc tác; là vi chất cần cho nhiều enzyme.
+Nguyên tố đầu tiên được tạo nhân tạo; ⁹⁹ᵐTc dùng chụp chẩn đoán hình ảnh trong y học hạt nhân.
+Kim loại họ platin; dùng làm xúc tác, tiếp điểm điện, hợp kim cứng, ngòi bút.
+Kim loại quý hiếm; dùng trong bộ xúc tác khí thải ô tô và mạ phản quang cho trang sức.
+Kim loại họ platin hấp thụ nhiều H₂; dùng làm xúc tác, bộ xúc tác ô tô, điện tử, trang sức.
+Kim loại quý, dẫn điện và dẫn nhiệt tốt nhất; dùng trong trang sức, điện tử, gương, phim ảnh, diệt khuẩn.
+Kim loại mềm, độc; dùng trong pin Ni-Cd, chất màu, mạ điện; nay bị hạn chế sử dụng.
+Kim loại mềm; dùng trong màn hình cảm ứng (ITO), chất bán dẫn và hợp kim nóng chảy thấp.
+Kim loại mềm, chống gỉ; dùng mạ thiếc (hộp thiếc), hàn điện tử, hợp kim đồng thanh.
+Á kim; dùng làm chất chống cháy, hợp kim chì cho ắc quy và bán dẫn hồng ngoại.
+Á kim; dùng trong pin mặt trời CdTe, vật liệu nhiệt điện và thép dễ gia công.
+Phi kim rắn màu tím đen; cần cho tuyến giáp; dùng trong sát trùng (cồn iốt), muối iốt, thuốc cản quang.
+Khí hiếm nặng; dùng trong đèn xenon, động cơ ion của tàu vũ trụ và gây mê.
+Kim loại kiềm mềm, hoạt động rất mạnh; dùng trong đồng hồ nguyên tử xác định giây chuẩn.
+Kim loại kiềm thổ; BaSO₄ dùng làm thuốc cản quang chụp dạ dày, pháo hoa xanh lá; muối tan rất độc.
+Kim loại đất hiếm đầu họ; dùng trong thấu kính quang học, pin NiMH, xúc tác cracking dầu mỏ.
+Đất hiếm phổ biến nhất; dùng đánh bóng thuỷ tinh, bộ xúc tác ô tô, đá lửa bật lửa.
+Đất hiếm; dùng trong nam châm, kính hàn che mắt, hợp kim máy bay, men gốm màu vàng.
+Đất hiếm; dùng trong nam châm neodymium cực mạnh (tai nghe, motor điện, tuabin gió) và laze.
+Nguyên tố phóng xạ; dùng trong pin hạt nhân, sơn phát quang, đo độ dày.
+Đất hiếm; dùng trong nam châm samari-coban chịu nhiệt và thanh điều khiển lò phản ứng.
+Đất hiếm; dùng trong phốt pho đỏ của màn hình, đèn huỳnh quang, chống làm giả tiền euro.
+Đất hiếm có từ tính; dùng làm chất tương phản MRI và vật liệu hấp thụ neutron.
+Đất hiếm; dùng trong phốt pho xanh lá của màn hình và hợp kim từ giảo.
+Đất hiếm; dùng trong nam châm chịu nhiệt cao, đĩa dữ liệu, tuabin gió.
+Đất hiếm có độ từ hoá cao nhất; dùng trong nam châm cường độ cao và laze.
+Đất hiếm; dùng trong khuếch đại sợi quang, laze y tế, men màu hồng.
+Đất hiếm hiếm nhất; dùng trong laze và máy chụp X-quang xách tay.
+Đất hiếm; dùng trong đồng hồ nguyên tử, laze sợi và cảm biến áp suất.
+Đất hiếm nặng nhất; dùng trong chụp PET và xúc tác cracking dầu mỏ.
+Kim loại chống ăn mòn, hấp thụ neutron mạnh; dùng làm thanh điều khiển lò phản ứng và vi mạch.
+Kim loại rất bền, chống axit, tương thích sinh học; dùng trong tụ điện điện thoại và cấy ghép xương.
+Kim loại nóng chảy cao nhất (3695 K); dùng làm dây tóc bóng đèn, mũi khoan, hợp kim cứng.
+Kim loại nóng chảy rất cao; dùng trong động cơ phản lực, xúc tác sản xuất xăng và cặp nhiệt điện.
+Kim loại đặc nhất (khoảng 22,59 g/cm³); dùng trong ngòi bút, tiếp điểm điện và hợp kim siêu cứng.
+Kim loại bền nhất với ăn mòn; dùng trong bugi cao cấp, nồi nấu chịu nhiệt cao.
+Kim loại quý; dùng làm trang sức, bộ xúc tác ô tô và thuốc điều trị ung thư (cisplatin).
+Kim loại quý, bền hoá học; dùng làm trang sức, điện tử, dự trữ giá trị và tiền tệ.
+Kim loại duy nhất ở thể lỏng trong điều kiện thường, rất độc; dùng trong đèn huỳnh quang và nhiệt kế kiểu cũ.
+Kim loại mềm, rất độc; dùng trong cảm biến hồng ngoại và thuỷ tinh đặc biệt.
+Kim loại nặng, mềm, độc; dùng trong ắc quy chì-axit, che chắn bức xạ và đạn.
+Kim loại nặng ít độc; dùng trong dược phẩm (thuốc dạ dày), mỹ phẩm, hợp kim dễ nóng chảy.
+Nguyên tố phóng xạ cực mạnh (Pierre và Marie Curie tìm ra); dùng khử tĩnh điện và làm nguồn nhiệt cho vệ tinh.
+Nguyên tố phóng xạ, cực hiếm trong vỏ Trái Đất; ²¹¹At được nghiên cứu để điều trị ung thư.
+Khí hiếm phóng xạ, nặng; tích tụ trong tầng hầm và là nguy cơ gây ung thư phổi; từng dùng trong xạ trị.
+Kim loại kiềm phóng xạ, cực hiếm và không bền; chỉ dùng trong nghiên cứu vật lý nguyên tử.
+Kim loại kiềm thổ phóng xạ; từng dùng làm sơn phát sáng cho đồng hồ, nay ²²³Ra dùng trong y học.
+Nguyên tố phóng xạ đầu họ actini; dùng làm nguồn neutron và nghiên cứu xạ trị.
+Kim loại phóng xạ yếu, khá phổ biến; có tiềm năng làm nhiên liệu hạt nhân, từng dùng làm măng sông đèn khí.
+Kim loại phóng xạ hiếm; chủ yếu dùng trong nghiên cứu khoa học.
+Nhiên liệu của lò phản ứng hạt nhân và vũ khí hạt nhân; phóng xạ và rất nặng.
+Nguyên tố siêu urani đầu tiên; dùng trong đầu dò neutron và để tổng hợp ²³⁸Pu.
+Dùng trong vũ khí hạt nhân, lò phản ứng và nguồn điện hạt nhân cho tàu thăm dò vũ trụ.
+Dùng trong đầu báo khói ion hoá (²⁴¹Am); phát xạ alpha.
+Phóng xạ; dùng làm nguồn nhiệt cho tàu vũ trụ và trong phổ kế tia X của robot thăm dò sao Hoả.
+Nguyên tố phóng xạ tổng hợp; chỉ dùng trong nghiên cứu và để tổng hợp các nguyên tố nặng hơn.
+Dùng làm nguồn neutron mạnh để khởi động lò phản ứng, tìm dầu mỏ và điều trị ung thư.
+Nguyên tố phóng xạ tổng hợp; tìm thấy trong bụi phóng xạ của vụ thử bom H; chỉ dùng trong nghiên cứu.
+Nguyên tố phóng xạ tổng hợp; chỉ có trong phòng thí nghiệm, phục vụ nghiên cứu.
+Nguyên tố phóng xạ tổng hợp (đặt theo Mendeleev); chỉ tạo được lượng rất nhỏ để nghiên cứu.
+Nguyên tố phóng xạ tổng hợp; chỉ tạo được vài nguyên tử một lúc để nghiên cứu hoá học.
+Nguyên tố phóng xạ tổng hợp, cuối dãy actini; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Rutherford), chỉ tồn tại thoáng qua; chỉ dùng trong nghiên cứu hạt nhân.
+Nguyên tố siêu nặng nhân tạo (đặt theo Dubna, Nga), chỉ tồn tại thoáng qua; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Glenn Seaborg), chỉ tạo được vài nguyên tử; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Niels Bohr), bán rã trong thời gian rất ngắn; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo bang Hessen, Đức), chỉ tồn tại thoáng qua; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Lise Meitner), chỉ tạo được vài nguyên tử; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Darmstadt, Đức), chỉ tồn tại thoáng qua; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Wilhelm Röntgen), bán rã rất nhanh; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Copernicus), có thể là chất lỏng hoặc khí; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo do Nhật Bản phát hiện đầu tiên; chỉ tạo được vài nguyên tử, chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Georgy Flerov), nằm gần “đảo bền” lý thuyết; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Moskva, Nga), bán rã trong giây; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo Livermore, Mỹ), bán rã trong mili giây; chỉ dùng trong nghiên cứu.
+Nguyên tố siêu nặng nhân tạo (đặt theo bang Tennessee, Mỹ), thuộc nhóm halogen; chỉ dùng trong nghiên cứu.
+Nguyên tố nặng nhất đã biết, nhân tạo (đặt theo Yuri Oganessian), thuộc nhóm khí hiếm; chỉ dùng trong nghiên cứu.`.split('\n');
+const nz=x=>String(x).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+const isTrans=z=>(z>=21&&z<=30)||(z>=39&&z<=48)||(z>=57&&z<=80)||(z>=89&&z<=112);
+const GL=['IA','IIA','IIIB','IVB','VB','VIB','VIIB','VIIIB','VIIIB','VIIIB','IB','IIB','IIIA','IVA','VA','VIA','VIIA','VIIIA'];
+const NOTES={1:'Nguyên tố nhẹ nhất và phổ biến nhất trong vũ trụ. Nhiên liệu cho mặt trời và nguồn năng lượng xanh tương lai.',
+2:'Khí hiếm nhẹ, trơ, dùng làm khí nâng khinh khí cầu và làm lạnh nam châm siêu dẫn (MRI).',
+6:'Nền tảng của hoá học hữu cơ và sự sống; tồn tại dưới dạng than chì, kim cương, graphene.',
+7:'Chiếm khoảng 78% khí quyển; thành phần của phân bón, protein và DNA.',
+8:'Cần cho hô hấp và sự cháy; chiếm khoảng 21% khí quyển.',
+11:'Kim loại kiềm mềm, phản ứng mạnh với nước; thành phần của muối ăn NaCl.',
+13:'Kim loại nhẹ, bền, dẫn điện tốt; dùng trong hàng không, bao bì, xây dựng.',
+14:'Nền tảng của chip bán dẫn, pin mặt trời và thuỷ tinh.',
+17:'Dùng khử trùng nước và sản xuất nhựa PVC; độc ở dạng khí.',
+20:'Cấu tạo xương, răng; thành phần của đá vôi và xi măng.',
+26:'Kim loại phổ biến nhất trong sản xuất thép; thành phần của hemoglobin trong máu.',
+29:'Dẫn điện và dẫn nhiệt rất tốt; dùng làm dây điện, đồ đồng.',
+47:'Kim loại quý, dẫn điện tốt nhất; dùng trang sức, điện tử, gương.',
+79:'Kim loại quý, bền hoá học, dùng trang sức, điện tử và dự trữ giá trị.',
+80:'Kim loại duy nhất lỏng ở điều kiện thường; rất độc.',
+82:'Kim loại nặng, mềm; dùng ắc quy chì-axit, che chắn bức xạ; độc với con người.',
+92:'Nguyên tố phóng xạ, nhiên liệu của lò phản ứng hạt nhân.'};
+
+const CFG={24:'[Ar] 3d⁵ 4s¹',29:'[Ar] 3d¹⁰ 4s¹',41:'[Kr] 4d⁴ 5s¹',42:'[Kr] 4d⁵ 5s¹',44:'[Kr] 4d⁷ 5s¹',45:'[Kr] 4d⁸ 5s¹',46:'[Kr] 4d¹⁰',47:'[Kr] 4d¹⁰ 5s¹',57:'[Xe] 5d¹ 6s²',58:'[Xe] 4f¹ 5d¹ 6s²',64:'[Xe] 4f⁷ 5d¹ 6s²',78:'[Xe] 4f¹⁴ 5d⁹ 6s¹',79:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹'};
+const GAS=[1,2,7,8,9,10,17,18,36,54,86],LIQ=[35,80];
+const stT=z=>GAS.includes(z)?'Khí':LIQ.includes(z)?'Lỏng':z>=104?'Chưa rõ':'Rắn';
+const stC=z=>GAS.includes(z)?'k':LIQ.includes(z)?'l':z>=104?'u':'';
+let curT=298;
+function stAt(e,T=curT){if(!e.mp)return'Chưa rõ';const mp=+e.mp,bp=+e.bp;if(T<mp)return'Rắn';if(e.bp)return T>=bp?'Khí':'Lỏng';return'Chưa rõ'}
+const stK=t=>t==='Khí'?'k':t==='Lỏng'?'l':t==='Rắn'?'':'u';
+function barBG(e){if(!e.mp)return'#6b7280';const a=Math.min(100,+e.mp/60);if(!e.bp)return`linear-gradient(90deg,#64748b ${a}%,#6b7280 ${a}%)`;const b=Math.min(100,+e.bp/60);return`linear-gradient(90deg,#64748b ${a}%,#1d4ed8 ${a}% ${b}%,#7c3aed ${b}%)`}
+const SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';const sup=n=>String(n).split('').map(d=>SUP[d]).join('');
+const EX={24:[2,8,13,1],29:[2,8,18,1],41:[2,8,18,12,1],42:[2,8,18,13,1],44:[2,8,18,15,1],45:[2,8,18,16,1],46:[2,8,18,18],47:[2,8,18,18,1],57:[2,8,18,18,9,2],58:[2,8,18,19,9,2],64:[2,8,18,25,9,2],78:[2,8,18,32,17,1],79:[2,8,18,32,18,1]};
+
+const E=RAW.split('\n').map((r,i)=>{const f=r.split('|'),z=i+1;
+  const c=NOBLE.includes(z)?'kh':NONMETAL.includes(z)?'pk':isTrans(z)?'cd':'kl';
+  return{z,sym:f[0],name:f[1],mass:f[2],den:f[3],en:f[4],ox:f[5],mp:f[6],bp:f[7],yr:f[8],c}});
+
+function pos(z){
+  if(z===1)return[1,1];if(z===2)return[1,18];
+  if(z<=4)return[2,z-2];if(z<=10)return[2,z+8];
+  if(z<=12)return[3,z-10];if(z<=18)return[3,z];
+  if(z<=36)return[4,z-18];if(z<=54)return[5,z-36];
+  if(z<=56)return[6,z-54];if(z<=71)return[9,z-54];
+  if(z<=86)return[6,z-68];if(z<=88)return[7,z-86];
+  if(z<=103)return[10,z-86];return[7,z-100];
+}
+const grp=z=>{const [r,c]=pos(z);return r>=9?null:c};
+const per=z=>{const [r]=pos(z);return r>=9?(r===9?6:7):r};
+
+function shellsOf(z){
+  if(EX[z])return EX[z];
+  const order=[];for(let s=2;s<=15;s++)for(let l=Math.min(Math.floor((s-1)/1),3);l>=0;l--){const n=s-l;if(n>=l+1&&l<=3)order.push([n,l])}
+  order.sort((a,b)=>(a[0]+a[1])-(b[0]+b[1])||a[0]-b[0]);
+  const sh=[];let left=z,cfg=[];
+  for(const [n,l] of order){if(left<=0)break;const k=Math.min(left,2*(2*l+1));left-=k;sh[n-1]=(sh[n-1]||0)+k;cfg.push([n,'spdf'[l],k])}
+  shellsOf.cfg=cfg;return sh;
+}
+function config(z){
+  shellsOf(z===1?1:z>0?(EX[z]?(shellsOf.cfg=null,z):z):z);
+  const sh=EX[z]?null:null;
+  if(CFG[z])return CFG[z]+' (đặc biệt)';
+  const full=shellsOf.cfg;const noble=[[2,'He'],[10,'Ne'],[18,'Ar'],[36,'Kr'],[54,'Xe'],[86,'Rn']];
+  let core=null;for(const [n,s] of noble)if(z>n+0&&z>n)core=[n,s];
+  let acc=0,out=[],used=0;
+  if(core){for(const t of full){if(used>=core[0])break;used+=t[2]}}
+  const rest=[];let u=0;for(const t of full){if(u>=(core?core[0]:0))rest.push(t);u+=t[2]}
+  rest.sort((a,b)=>a[0]-b[0]||'spdf'.indexOf(a[1])-'spdf'.indexOf(b[1]));
+  return (core?'['+core[1]+'] ':'')+rest.map(t=>t[0]+t[1]+sup(t[2])).join(' ');
+}
+
+const g=document.getElementById('grid');
+function cell(e,r,c){const d=document.createElement('div');d.className='el '+e.c;d.style.gridRow=r+1;d.style.gridColumn=c+1;d.dataset.z=e.z;
+  d.innerHTML=`<div class="top"><span class="n">${e.z}</span><span class="ms">${(+e.mass).toFixed(1)}</span></div><span class="s">${e.sym}</span><span class="m">${VN[e.z-1]}</span><span class="st"></span><div class="tb" title="Nóng chảy: ${e.mp?e.mp+' K':'—'} | Sôi: ${e.bp?e.bp+' K':'—'}"><i></i></div>`;d.querySelector('.tb').style.background=barBG(e);
+  d.onclick=()=>open(e.z);g.appendChild(d)}
+function ph(r,c,t){const d=document.createElement('div');d.className='lbl';d.style.gridRow=r+1;d.style.gridColumn=c+1;d.textContent=t;g.appendChild(d)}
+E.forEach(e=>{const[r,c]=pos(e.z);cell(e,r,c)});
+ph(6,3,'57–71');ph(7,3,'89–103');ph(9,1,'Lanthanide');ph(10,1,'Actinide');
+g.style.gridTemplateRows='auto repeat(7,auto) 14px repeat(2,auto)';
+(function(){const k=document.createElement('div');k.className='corner';k.style.cssText='grid-row:1;grid-column:1';k.innerHTML='Chu kì';g.appendChild(k);
+GL.forEach((l,i)=>{const h=document.createElement('div');h.className='hdr';h.style.cssText='grid-row:1;grid-column:'+(i+2);h.innerHTML='<b>'+(i+1)+'</b>'+l;g.appendChild(h)});
+for(let p=1;p<=7;p++){const d=document.createElement('div');d.className='per';d.style.cssText='grid-row:'+(p+1)+';grid-column:1';d.textContent=p;g.appendChild(d)}})();
+
+let cat=null;
+document.querySelectorAll('.chip[data-c]').forEach(b=>b.onclick=()=>{cat=cat===b.dataset.c?null:b.dataset.c;document.querySelectorAll('.chip[data-c]').forEach(x=>x.classList.toggle('on',x.dataset.c===cat));filter()});
+let sp=false;
+document.getElementById('spbtn').onclick=function(){sp=!sp;this.classList.toggle('on',sp);filter()};
+const q=document.getElementById('q');q.oninput=filter;
+function filter(){
+  const t=q.value.trim().toLowerCase();let m=null;
+  if(m=t.match(/^([<>])\s*(\d+)$/)){}
+  document.querySelectorAll('.el').forEach(d=>{const e=E[d.dataset.z-1];let ok=(!cat||e.c===cat)&&(!sp||!!EX[e.z]);
+    if(ok&&t){if(m)ok=m[1]==='>'?e.z>+m[2]:e.z<+m[2];
+      else{const u=nz(t);ok=nz(e.sym)===u||nz(e.name).includes(u)||nz(VN[e.z-1]).includes(u)||String(e.z)===t||nz(stAt(e))===u||nz(CAT[e.c]).includes(u)}}
+    d.classList.toggle('dim',!ok);d.classList.toggle('spk',sp&&!!EX[e.z])});
+  const bx=document.getElementById('spinfo');bx.style.display=sp?'block':'none';
+  if(sp)bx.innerHTML='<h3>MỘT SỐ CẤU HÌNH ELECTRON ĐẶC BIỆT (bấm để xem chi tiết)</h3>'+Object.keys(CFG).filter(z=>!cat||E[z-1].c===cat).map(z=>`<div class="it" onclick="open(${z})"><b>${z} ${E[z-1].sym}</b><span>${CFG[z]}</span></div>`).join('')}
+
+function bohr(z){
+  const sh=shellsOf(z)&&(EX[z]||shellsOf(z)).filter(x=>x);
+  let s=`<svg viewBox="0 0 340 340"><circle cx="170" cy="170" r="${z>20?10:14}" fill="#ef4444" stroke="#fca5a5"/>`;
+  const step=Math.min(22,135/sh.length);
+  sh.forEach((n,i)=>{const r=26+step*(i+1)*(sh.length>5?1:1.1);
+    s+=`<circle cx="170" cy="170" r="${r}" fill="none" style="stroke:var(--line)" stroke-dasharray="3 4"/>`;
+    s+=`<g class="orb" style="animation-duration:${6+i*4}s">`;
+    for(let k=0;k<n;k++){const a=2*Math.PI*k/n;s+=`<circle cx="${170+r*Math.cos(a)}" cy="${170+r*Math.sin(a)}" r="3.6" fill="#38bdf8"/>`}
+    s+='</g>'});
+  return s+'</svg>'}
+
+const fmt=(v,u='')=>v?v+u:'—';
+const K=v=>v?`${v} K (${Math.round(v-273.15)}°C)`:'—';
+const cmp=[];
+function open(z){
+  const e=E[z-1],[r,c]=pos(z),state=z===2?'Lỏng':'Rắn';
+  const desc=DESC[z-1];
+  document.getElementById('box').innerHTML=`
+  <div class="hd"><div class="sym ${e.c}"><small>${z}</small><b>${e.sym}</b></div>
+    <div><h2>${e.name} <span>(${VN[z-1]})</span></h2><div class="cat" style="color:${COL[e.c]}">${CAT[e.c]}</div>
+    <div style="color:var(--mut);font-size:13px">Trạng thái ở ${curT} K: ${stAt(e)}</div></div>
+    <button class="x" onclick="closeM()">✕</button></div>
+  <div class="bd"><div class="bohr"><h4>MÔ HÌNH NGUYÊN TỬ BOHR</h4>${bohr(z)}<div class="cfg">${config(z)}</div></div>
+  <div><h3>Tính chất Hoá-Lý</h3><div class="props">
+    <div class="p"><span>Khối lượng nguyên tử</span><b>${e.mass} u</b></div>
+    <div class="p"><span>Mật độ (g/cm³)</span><b>${fmt(e.den)}</b></div>
+    <div class="p"><span>Độ âm điện (Pauling)</span><b>${fmt(e.en)}</b></div>
+    <div class="p"><span>Trạng thái ôxi hóa</span><b>${fmt(e.ox)}</b></div>
+    <div class="p"><span>Điểm nóng chảy</span><b>${K(e.mp)}</b></div>
+    <div class="p"><span>Điểm sôi</span><b>${K(e.bp)}</b></div>
+    <div class="p"><span>Chu kỳ / Nhóm</span><b>Chu kỳ ${per(z)}, ${grp(z)?'Nhóm '+grp(z)+' ('+GL[grp(z)-1]+')':(r===9?'Lanthanide':'Actinide')}</b></div>
+    <div class="p"><span>Năm phát hiện</span><b>${e.yr==='0'?'Cổ đại':e.yr}</b></div>
+    <div class="p"><span>Số hiệu nguyên tử (Z)</span><b>${z}</b></div>
+    <div class="p"><span>Trạng thái (25°C, 1 atm)</span><b>${stT(z)}</b></div></div>
+    <div class="desc"><h3 style="margin-bottom:6px">ỨNG DỤNG & ĐẶC ĐIỂM</h3>${desc}</div></div></div>
+  <div class="ft"><button class="btn" onclick="addCmp(${z})">+ Thêm vào so sánh</button></div>`;
+  document.getElementById('modal').classList.add('open')}
+function closeM(){document.getElementById('modal').classList.remove('open')}
+document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')closeM()};
+addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+
+function addCmp(z){if(!cmp.includes(z)){if(cmp.length>=4)cmp.shift();cmp.push(z)}renderCmp();closeM()}
+function rmCmp(z){cmp.splice(cmp.indexOf(z),1);renderCmp()}
+function renderCmp(){
+  const el=document.getElementById('cmp');if(!cmp.length){el.style.display='none';return}
+  const L=[E[0]].slice(0,0),es=cmp.map(z=>E[z-1]);
+  const rows=[['Khối lượng (u)','mass'],['Mật độ (g/cm³)','den'],['Độ âm điện','en'],['Số ôxi hóa','ox'],['Nóng chảy (K)','mp'],['Sôi (K)','bp'],['Năm phát hiện','yr']];
+  el.style.display='block';
+  el.innerHTML=`<h3>SO SÁNH NGUYÊN TỐ</h3><table><tr><th></th>${es.map(e=>`<th>${e.sym} – ${e.name} <a href="#" onclick="rmCmp(${e.z});return false" style="color:var(--mut)">✕</a></th>`).join('')}</tr>`+
+  rows.map(([n,k])=>`<tr><td style="color:var(--mut)">${n}</td>${es.map(e=>`<td>${k==='yr'&&e.yr==='0'?'Cổ đại':fmt(e[k])}</td>`).join('')}</tr>`).join('')+'</table>';
+}
+function updateT(){
+  const T=curT;document.getElementById('tv').innerHTML=`<b>${T} K</b><span>${(T-273.15).toFixed(1)} °C</span>`;
+  document.querySelectorAll('.el').forEach(d=>{const e=E[d.dataset.z-1],t=stAt(e),b=d.querySelector('.st');
+    b.textContent=t;b.className='st '+stK(t);d.querySelector('.tb i').style.left=Math.min(100,T/60)+'%'});
+  if(q.value.trim())filter()}
+document.getElementById('T').oninput=function(){curT=+this.value;updateT()};
+document.getElementById('t0').onclick=()=>{curT=298;document.getElementById('T').value=298;updateT()};
+updateT();
+let theme=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+function applyTheme(){document.documentElement.dataset.theme=theme;document.getElementById('th').textContent=theme==='dark'?'☀️ Sáng':'🌙 Tối'}
+document.getElementById('th').onclick=()=>{theme=theme==='dark'?'light':'dark';applyTheme()};
+applyTheme();
+</script>
+</body>
+</html>
